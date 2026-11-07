@@ -1,6 +1,6 @@
 {
   "name": "dsh-prompt-optimized",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "description": "Prompt Optimizer for DeepSeek Harness: turns raw prompt drafts and vague requirements into structured, executable system prompts (six sections, six hardening rules), with a one-click toolbar button that rewrites the composer draft in place, without sending it.",

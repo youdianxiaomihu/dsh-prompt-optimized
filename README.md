@@ -132,6 +132,12 @@ plugin_manager({ action: "install_bundle", target: "github:youdianxiaomihu/dsh-p
   用 prompt-optimizer 把这段提示词改造成系统提示词：把我们的周报模板改成更专业的写法
   ```
 
+## 更新记录
+
+- `0.4.0`：原地升级徽标正式发布（实现自 0.3.2 起）；修复按钮样式此前未注入页面、导致外观不生效的问题。
+- `0.3.1`：输入框工具栏「一键优化」按钮，把草稿原地改写为结构化提示词。
+- `0.1.1`：首个可安装版本，注册 `prompt-optimizer` 技能。
+
 ## 反馈
 
 - 问题与建议：<https://github.com/youdianxiaomihu/dsh-prompt-optimized/issues>
