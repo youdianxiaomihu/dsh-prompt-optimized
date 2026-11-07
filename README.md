@@ -1,6 +1,18 @@
 # 提示词优化器（dsh-prompt-optimized）
 
-DeepSeek Harness 插件：把原始需求或提示词草稿重构为**结构化、可执行的系统提示词**，对标 WorkBuddy 的优化标准。
+把原始需求或提示词草稿重构为**结构化、可执行的系统提示词**的 DeepSeek Harness 插件，对标 WorkBuddy 的优化标准。
+
+仓库地址：<https://github.com/youdianxiaomihu/dsh-prompt-optimized>
+
+## 快速安装
+
+在任意 DSH 会话里调用一次即可：
+
+```
+plugin_manager({ action: "install_bundle", target: "github:youdianxiaomihu/dsh-prompt-optimized" })
+```
+
+装完用 `plugin_manager({ action: "list_bundles" })` 确认列表里出现 `dsh-prompt-optimized`；重启 DSH 后依然生效。其他安装方式与卸载、升级见[安装](#安装)。
 
 ## 能力
 
@@ -42,9 +54,7 @@ dsh-prompt-optimized/
 
 本插件是一个 DSH **plugin bundle**（`package.json` 里声明 `dsh.bundle.patch`），安装方式是让 plugin manager 把这个包装进当前 profile，**不要**手写 profile 的 `package.json` / `cordis.patch.yml`，也不要在 profile 目录里跑 pnpm。
 
-### 方式一：从 GitHub 安装（仓库发布后推荐）
-
-在任意 Harness 会话里调用：
+### 方式一：从 GitHub 安装（推荐）
 
 ```
 plugin_manager({ action: "install_bundle", target: "github:youdianxiaomihu/dsh-prompt-optimized" })
@@ -56,21 +66,23 @@ plugin_manager({ action: "install_bundle", target: "github:youdianxiaomihu/dsh-p
 - `git+https://github.com/youdianxiaomihu/dsh-prompt-optimized.git`
 - `https://github.com/youdianxiaomihu/dsh-prompt-optimized/archive/refs/heads/main.tar.gz`（tarball URL）
 
+需要锁定版本时，可以在 git spec 后面加 ref，例如 `github:youdianxiaomihu/dsh-prompt-optimized#<commit-sha>`。
+
 git 源在安装前会先探测 github.com 连通性；内网或代理环境下若报超时，改用 HTTPS tarball 或在能访问 GitHub 的网络下重试。
 
 ### 方式二：从本地目录安装（开发调试推荐）
 
 ```
-plugin_manager({ action: "install_bundle", target: "<本目录的绝对路径>" })
+plugin_manager({ action: "install_bundle", target: "<本仓库的绝对路径>" })
 ```
 
 例如 Windows 下：
 
 ```
-plugin_manager({ action: "install_bundle", target: "C:\\Users\\Root\\Desktop\\dsh\\dsh-plugins\\dsh-prompt-optimized" })
+plugin_manager({ action: "install_bundle", target: "D:\\work\\dsh-prompt-optimized" })
 ```
 
-两个方式都会完成「pnpm 安装依赖 → 注册到 profile 的 bundle 列表 → 应用 `cordis.patch.yml` 补丁层」，新 bundle 通过 HMR 即可生效，重启后依然有效。
+前两种方式都会完成「pnpm 安装依赖 → 注册到 profile 的 bundle 列表 → 应用 `cordis.patch.yml` 补丁层」，新 bundle 通过 HMR 即可生效，重启后依然有效。
 
 ### 方式三：CLI（只适用于 DSH 未运行、需要修复 profile 时）
 
@@ -100,7 +112,16 @@ plugin_manager({ action: "install_bundle", target: "github:youdianxiaomihu/dsh-p
 ## 使用
 
 - 模型侧：当请求匹配技能描述时自动调用。
-- 用户侧：直接调用技能 `prompt-optimizer`，例如「用 prompt-optimizer 把这段提示词改造成系统提示词」。
+- 用户侧：直接调用技能 `prompt-optimizer`，例如：
+
+  ```
+  用 prompt-optimizer 把这段提示词改造成系统提示词：把我们的周报模板改成更专业的写法
+  ```
+
+## 反馈
+
+- 问题与建议：<https://github.com/youdianxiaomihu/dsh-prompt-optimized/issues>
+- 技能正文改动请在 PR 里说明改了哪个板块、为什么改，方便对照 `skills/prompt-optimizer/SKILL.md` 复核。
 
 ## 注意
 
