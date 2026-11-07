@@ -1,0 +1,40 @@
+{
+  "name": "dsh-prompt-optimized",
+  "version": "0.1.1",
+  "private": true,
+  "type": "module",
+  "description": "Prompt Optimizer for DeepSeek Harness: turns raw prompt drafts and vague requirements into structured, executable system prompts (six sections, six hardening rules).",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/youdianxiaomihu/dsh-prompt-optimized.git"
+  },
+  "homepage": "https://github.com/youdianxiaomihu/dsh-prompt-optimized#readme",
+  "bugs": {
+    "url": "https://github.com/youdianxiaomihu/dsh-prompt-optimized/issues"
+  },
+  "keywords": [
+    "dsh-plugin",
+    "dsh-bundle",
+    "prompt-optimizer",
+    "skill"
+  ],
+  "exports": {
+    ".": "./index.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "cordis.patch.yml",
+    "skills/prompt-optimizer/SKILL.md",
+    "locale/en.json",
+    "locale/zh.json",
+    "icon.svg",
+    "README.md"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

@@ -1,0 +1,2 @@
+# 统一使用 LF 存入仓库，避免 Windows 下 CRLF 噪声
+* text=auto eol=lf

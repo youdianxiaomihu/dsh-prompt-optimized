@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Prompt Optimizer",
+    "description": "Turns raw prompt drafts or vague requirements into structured, executable system prompts: concretizes vague wording, fills in missing style/quality/effect dimensions by scenario, and outputs six sections (role, goal, workflow, output spec, constraints, thinking rules)."
+  }
+}
