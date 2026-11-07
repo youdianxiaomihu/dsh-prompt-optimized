@@ -14,6 +14,8 @@ plugin_manager({ action: "install_bundle", target: "github:youdianxiaomihu/dsh-p
 
 装完用 `plugin_manager({ action: "list_bundles" })` 确认列表里出现 `dsh-prompt-optimized`；重启 DSH 后依然生效。其他安装方式与卸载、升级见[安装](#安装)。
 
+装好后输入框工具栏左侧会出现「一键优化」按钮；以后插件发布新版本时，按钮旁会自动多出一个「更新 x.y.z」徽标，点一下即可原地升级（见[升级](#升级)）。
+
 ## 能力
 
 注册一个可被模型与用户调用的技能 `prompt-optimizer`，并在输入框工具栏加一个**一键按钮**。当用户要求优化、改写、结构化或审查提示词、系统提示词、Agent 人设、需求说明时，技能指导模型：
@@ -45,7 +47,7 @@ plugin_manager({ action: "install_bundle", target: "github:youdianxiaomihu/dsh-p
 dsh-prompt-optimized/
 ├── cordis.patch.yml            # 插件激活条目
 ├── index.js                    # 注册技能 + 一键优化 RPC 通道（Host 半）
-├── client.js                   # 输入框「一键优化」按钮（Client 半）
+├── client.js                   # 输入框「一键优化」按钮 + 原地升级徽标（Client 半）
 ├── skills/prompt-optimizer/
 │   └── SKILL.md                # 优化器操作手册（技能正文）
 ├── locale/{en,zh}.json         # 插件管理器显示名称与描述
@@ -102,18 +104,27 @@ plugin_manager({ action: "list_plugins" })   # 查看插入的 dsh-prompt-optimi
 plugin_manager({ action: "remove_bundle", target: "dsh-prompt-optimized" })
 ```
 
-### 升级
+### 升级（原地升级）
+
+插件自带原地升级：从 Git 源或 npm 安装、且 DSH 里装了插件市场（`dshmarket`）时，检测到新版本会在「一键优化」按钮旁显示「更新 x.y.z」徽标，点一下即可完成「下载 → 替换 → 失败自动回滚」，成功后徽标变成「已更新，重启生效」，重启 DSH 即可。
+
+- 徽标只在真的有新版本时出现；没有插件市场、或市场版本过旧时静默隐藏，不影响按钮本身。
+- 升级走插件市场的 update API（`/dsh-market/api/v1`），插件不自己跑 pnpm，也不需要先卸载。
+- 从本地目录安装（`link:`）时没有可比较的远端版本，市场会报 `source: linked`，不会提示更新——此时目录里的文件就是当前版本，改完重启 DSH 即生效。
+
+手动升级（没有插件市场、或想指定版本时）：
 
 ```
 plugin_manager({ action: "remove_bundle", target: "dsh-prompt-optimized" })
 plugin_manager({ action: "install_bundle", target: "github:youdianxiaomihu/dsh-prompt-optimized" })
 ```
 
-`install_bundle` 对已安装的包会报 `already-installed`，所以升级要先 remove 再 install。
+`install_bundle` 对已安装的包会报 `already-installed`，所以手动升级要先 remove 再 install；原地升级徽标正是为了免掉这一步。
 
 ## 使用
 
 - 一键按钮：输入框工具栏左侧的「一键优化 / One-click optimize」按钮。先在输入框写下需求，点按钮后 Host 半调用当前会话所用模型完成优化，结果以**几段完整文字**（无标题、无列表，控制篇幅以节省 token）**直接写回输入框**（不发送、不产生聊天消息），可继续修改或自行发送。输入框为空、正在发送或正在优化时按钮自动禁用，避免重复触发；失败时按钮提示重试，原内容保留。
+- 原地升级徽标：「更新 x.y.z」出现在按钮右侧，点一下开始升级，过程中显示「更新中…」，失败会变成「更新失败，点此重试」（悬停可看具体原因），成功后提示重启 DSH。
 - 模型侧：当请求匹配技能描述时自动调用。
 - 用户侧：直接调用技能 `prompt-optimizer`，例如：
 
@@ -130,4 +141,5 @@ plugin_manager({ action: "install_bundle", target: "github:youdianxiaomihu/dsh-p
 
 - 插件为 Host + Client 双半：Host 半注册技能，Client 半只在 Web 界面渲染输入框按钮；终端等无 Web 界面的宿主只提供技能。
 - 从本地目录安装时 profile 里存的是 `link:` 指向，**移动或删除本目录会让已安装的插件变成悬空链接**，下次启动 profile 可能无法组装；移动后重新执行一次 `install_bundle` 指向新路径即可修复。
+- 原地升级徽标依赖插件市场 `dshmarket` 的 update API；没有它时只保留手动升级路径，按钮功能不受影响。
 - 从 npm 安装时不要把 `private` 改成 `false` 除非确实要发布到 npm 仓库。
