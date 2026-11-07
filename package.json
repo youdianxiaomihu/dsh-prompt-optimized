@@ -1,9 +1,9 @@
 {
   "name": "dsh-prompt-optimized",
-  "version": "0.1.1",
+  "version": "0.3.1",
   "private": true,
   "type": "module",
-  "description": "Prompt Optimizer for DeepSeek Harness: turns raw prompt drafts and vague requirements into structured, executable system prompts (six sections, six hardening rules).",
+  "description": "Prompt Optimizer for DeepSeek Harness: turns raw prompt drafts and vague requirements into structured, executable system prompts (six sections, six hardening rules), with a one-click toolbar button that rewrites the composer draft in place, without sending it.",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/youdianxiaomihu/dsh-prompt-optimized.git"
@@ -20,11 +20,13 @@
   ],
   "exports": {
     ".": "./index.js",
+    "./client": "./client.js",
     "./locale/*.json": "./locale/*.json",
     "./icon": "./icon.svg"
   },
   "files": [
     "index.js",
+    "client.js",
     "cordis.patch.yml",
     "skills/prompt-optimizer/SKILL.md",
     "locale/en.json",
@@ -35,6 +37,13 @@
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-conversation"
+      ]
     }
   }
 }

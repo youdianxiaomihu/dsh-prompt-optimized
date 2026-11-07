@@ -16,7 +16,7 @@ plugin_manager({ action: "install_bundle", target: "github:youdianxiaomihu/dsh-p
 
 ## 能力
 
-注册一个可被模型与用户调用的技能 `prompt-optimizer`。当用户要求优化、改写、结构化或审查提示词、系统提示词、Agent 人设、需求说明时，技能指导模型：
+注册一个可被模型与用户调用的技能 `prompt-optimizer`，并在输入框工具栏加一个**一键按钮**。当用户要求优化、改写、结构化或审查提示词、系统提示词、Agent 人设、需求说明时，技能指导模型：
 
 1. **需求解析**：提取核心目标、使用场景、受众与语气，建立原始要求清单，识别角色模糊、目标不可判定、步骤缺失、约束冲突等缺陷。
 2. **具象化拆解**：把「美观、专业、好用、高效」等形容词拆成可验证标准，覆盖风格、质量、效果三个维度，不允许形容词裸奔。
@@ -24,6 +24,7 @@ plugin_manager({ action: "install_bundle", target: "github:youdianxiaomihu/dsh-p
 4. **结构化重构**：生成六个板块——角色设定、核心目标、工作流程、输出规范、约束规则（必须 / 禁止 / 注意事项）、思考要求；除角色设定、核心目标按例外处理外，每个板块「总起概括 + 分点罗列」，一条一个维度；思考要求须写 3–6 条可执行校验。
 5. **语言与守恒校验**：口语化表述转为书面语并给出判定条件；逐条追溯原始需求，不新增、不删减、不改目标。
 6. **自检与交付**：按质量门槛逐项检查结构与内容，不通过则回到对应步骤修正。
+7. **确认询问**：以聊天回复交付结果时，主动询问「使用此提示词 / 重新生成 / 取消」；选「使用」输出可复制的终稿代码块，选「重新生成」重做一版并再次询问。由「一键优化」按钮触发、结果直接写回输入框的调用不询问，用户自行修改或发送。
 
 六条硬性规则：
 
@@ -43,7 +44,8 @@ plugin_manager({ action: "install_bundle", target: "github:youdianxiaomihu/dsh-p
 ```
 dsh-prompt-optimized/
 ├── cordis.patch.yml            # 插件激活条目
-├── index.js                    # 读取 SKILL.md 并注册技能
+├── index.js                    # 注册技能 + 一键优化 RPC 通道（Host 半）
+├── client.js                   # 输入框「一键优化」按钮（Client 半）
 ├── skills/prompt-optimizer/
 │   └── SKILL.md                # 优化器操作手册（技能正文）
 ├── locale/{en,zh}.json         # 插件管理器显示名称与描述
@@ -111,6 +113,7 @@ plugin_manager({ action: "install_bundle", target: "github:youdianxiaomihu/dsh-p
 
 ## 使用
 
+- 一键按钮：输入框工具栏左侧的「一键优化 / One-click optimize」按钮。先在输入框写下需求，点按钮后 Host 半调用当前会话所用模型完成优化，结果以**几段完整文字**（无标题、无列表，控制篇幅以节省 token）**直接写回输入框**（不发送、不产生聊天消息），可继续修改或自行发送。输入框为空、正在发送或正在优化时按钮自动禁用，避免重复触发；失败时按钮提示重试，原内容保留。
 - 模型侧：当请求匹配技能描述时自动调用。
 - 用户侧：直接调用技能 `prompt-optimizer`，例如：
 
@@ -125,6 +128,6 @@ plugin_manager({ action: "install_bundle", target: "github:youdianxiaomihu/dsh-p
 
 ## 注意
 
-- 插件为 Host-only，不包含任何 UI 组件。
+- 插件为 Host + Client 双半：Host 半注册技能，Client 半只在 Web 界面渲染输入框按钮；终端等无 Web 界面的宿主只提供技能。
 - 从本地目录安装时 profile 里存的是 `link:` 指向，**移动或删除本目录会让已安装的插件变成悬空链接**，下次启动 profile 可能无法组装；移动后重新执行一次 `install_bundle` 指向新路径即可修复。
 - 从 npm 安装时不要把 `private` 改成 `false` 除非确实要发布到 npm 仓库。
